@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.45.1",
     "connectkit": "^1.8.2",
+    "gh-pages": "^6.1.1",
     "pinata-web3": "^0.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
