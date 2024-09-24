@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { getAccount } from "@wagmi/core";
-import { config } from "../Web3Helpers/Web3Provider";
+import { config } from "../Web3Helpers/wagmi";
 import { abi } from "../Web3Helpers/abi";
 
 function Analyze() {
@@ -14,7 +14,7 @@ function Analyze() {
     audioIpfsUrl: "",
   });
   const [audioFile, setAudioFile] = useState<File>();
-  const [audioIpfsHash, setAudioIpfsHash] = useState<String>();
+  const [, setAudioIpfsHash] = useState<String>();
   const [isUploading, setIsUploading] = useState(false);
   const [isCreatingTokenURI, setIsCreatingTokenURI] = useState(false);
   const [tokenURI, setTokenURI] = useState<String>("");
@@ -91,10 +91,9 @@ function Analyze() {
     });
   };
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+  const { isLoading: isConfirming } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   const mintNFT = async () => {
     if (account.address === undefined) {
@@ -114,19 +113,22 @@ function Analyze() {
     setIsCreatingTokenURI(true);
 
     const nftMetadata = {
-      name: metadata.name,
-      description: metadata.description,
-      audio: `ipfs://${audioIpfsHash}`,
-      attributes: [
-        {
-          trait_type: "Media",
-          value: "Audio",
+      title: "Audio NFT",
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          descrption: metadata.name,
         },
-        {
-          trait_type: "Audio URL",
-          value: `ipfs://${audioIpfsHash}`,
+        description: {
+          type: "string",
+          description: metadata.description,
         },
-      ],
+        audio: {
+          type: "string",
+          description: metadata.audioIpfsUrl,
+        },
+      },
     };
 
     try {
